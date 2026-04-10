@@ -15,10 +15,13 @@ class Repository:
     url: str
     name: str
     about: str
+    language: str = "Unknown"
+    
     def print(self):
-        print("URL   : ", self.url)
-        print("Name  : ", self.name)
-        print("About : ", self.about)
+        print("URL      : ", self.url)
+        print("Name     : ", self.name)
+        print("About    : ", self.about)
+        print("Language : ", self.language)
         
 class GitHubCrawler:
     GITHUB_HOME = 'https://github.com'
@@ -61,7 +64,16 @@ class GitHubCrawler:
                 desc_tag = item.find('p', itemprop='description')
                 repo_about = desc_tag.get_text(strip=True) if desc_tag else ""
                 
-                repositories.append(Repository(url=repo_link, name=repo_name, about=repo_about))
+                # Extract Language
+                lang_tag = item.find('span', itemprop='programmingLanguage')
+                repo_lang = lang_tag.get_text(strip=True) if lang_tag else "N/A"
+                
+                repositories.append(Repository(
+                    url=repo_link, 
+                    name=repo_name, 
+                    about=repo_about, 
+                    language=repo_lang
+                ))
         
         return repositories
         
