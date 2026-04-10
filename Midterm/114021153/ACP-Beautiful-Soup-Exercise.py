@@ -38,7 +38,21 @@ class GitHubCrawler:
         Extract repository information
         """
         repositories = []
-        # TODO
+        url = f'{self.GITHUB_HOME}/{self.username}?tab=repositories'
+        soup = self.getPage(url)
+        
+        if not soup:
+            return repositories
+            
+        # Find all repository items
+        repo_list = soup.find('div', id='user-repositories-list')
+        if not repo_list:
+            return repositories
+            
+        items = repo_list.find_all('li', itemprop='owns')
+        for item in items:
+            # TODO: Extract specific details
+            pass
         
         return repositories
         
