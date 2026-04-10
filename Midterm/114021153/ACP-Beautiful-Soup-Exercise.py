@@ -51,8 +51,17 @@ class GitHubCrawler:
             
         items = repo_list.find_all('li', itemprop='owns')
         for item in items:
-            # TODO: Extract specific details
-            pass
+            # Extract name and URL
+            name_tag = item.find('a', itemprop='name codeRepository')
+            if name_tag:
+                repo_name = name_tag.get_text(strip=True)
+                repo_link = self.GITHUB_HOME + name_tag['href']
+                
+                # Extract "About" (description)
+                desc_tag = item.find('p', itemprop='description')
+                repo_about = desc_tag.get_text(strip=True) if desc_tag else ""
+                
+                repositories.append(Repository(url=repo_link, name=repo_name, about=repo_about))
         
         return repositories
         
